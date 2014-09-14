@@ -8,9 +8,9 @@ http = httplib2.Http()
 
 # List possible subreddits
 subs = ['electronicmusic','dnb','liquiddnb','trance','house','trap']
-
-for item in enumerate(subs):
-	print str(item)
+print "Subreddits available for scraping:"
+for index, item in enumerate(subs):
+	print index, item
 try:
 	sub = int(raw_input('Select a subreddit to grab links from: '))
 except ValueError:
