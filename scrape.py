@@ -2,7 +2,7 @@
 #!/usr/bin/env python2
 
 import httplib2
-from BeautifulSoup import BeautifulSoup, SoupStrainer
+from bs4 import BeautifulSoup, SoupStrainer
 
 http = httplib2.Http()
 
@@ -17,6 +17,7 @@ except ValueError:
 	print "You must enter a valid number!"
 
 status, response = http.request('http://www.reddit.com/r/' + subs[sub])
+# soup = BeautifulSoup(open.http('http://www.reddit.com/r/' + subs[sub]))
 
 # Function to remove duplicate links
 def unique(items):
@@ -34,10 +35,10 @@ ytLinks = []
 scLinks = []
 
 # For loop to append found links
-for link in BeautifulSoup(response, parseOnlyThese=SoupStrainer('a')):
-	if link.has_key('href') and 'https://www.youtube.com' in link['href']:
+for link in BeautifulSoup(response).find_all('a', href=True):
+	if 'https://www.youtube.com' in link['href']:
 		ytLinks.append(str(link['href']))
-	if link.has_key('href') and 'https://soundcloud.com' in link['href']:
+	if 'https://soundcloud.com' in link['href']:
 		scLinks.append(str(link['href']))
 
 # Output link lists
