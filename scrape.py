@@ -17,7 +17,6 @@ except ValueError:
 	print "You must enter a valid number!"
 
 status, response = http.request('http://www.reddit.com/r/' + subs[sub])
-# soup = BeautifulSoup(open.http('http://www.reddit.com/r/' + subs[sub]))
 
 # Function to remove duplicate links
 def unique(items):
