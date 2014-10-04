@@ -66,7 +66,7 @@ def ytDL():
 		video = pafy.new(ytLinks[i])
 		audio = video.getbestaudio(preftype="m4a",ftypestrict=True)
 		title = re.sub('[/,.!@$#]', '', video.title)
-		print "Downloading: " + title + "." + audio.extension + "----------"
+		print "Downloading: " + title + "." + audio.extension
 		audio.download(filepath="/home/meder/Source/in/" + title + "." + audio.extension)
 		i += 1
 
