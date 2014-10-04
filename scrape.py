@@ -1,22 +1,28 @@
 # Reddit.com music subreddit link scraper - Mike Eder 2014
 #! /usr/bin/python
 
-import httplib2, timeit, pafy
+import httplib2, timeit, pafy, re, sys
 from bs4 import BeautifulSoup, SoupStrainer
+
 
 http = httplib2.Http()
 
 # List possible subreddits
-subs = ['electronicmusic','dnb','liquiddnb','trance','house','trap']
-print "Subreddits available for scraping:"
-for index, item in enumerate(subs):
-	print index, item
-try:
-	sub = int(raw_input('Select a subreddit to grab links from: '))
-except ValueError:
-	print "You must enter a valid number!"
+#subs = ['electronicmusic','dnb','liquiddnb','trance','house','trap']
+#print "Subreddits available for scraping:"
+#for index, item in enumerate(subs):
+#	print index, item
+#try:
+#	sub = int(raw_input('Select a subreddit to grab links from: '))
+#except ValueError:
+#	print "You must enter a valid number!"
 
-status, response = http.request('http://www.reddit.com/r/' + subs[sub])
+# Get sub from sys.argv
+
+sub = str(sys.argv[1])
+full = 'http://www.reddit.com/r/' + sub
+print 'Scraping links from ' + full
+status, response = http.request(full)
 
 # Function to remove duplicate links
 def unique(items):
@@ -59,10 +65,10 @@ def ytDL():
 		i = int(i)
 		video = pafy.new(ytLinks[i])
 		audio = video.getbestaudio(preftype="m4a",ftypestrict=True)
-		print "Downloading: " + video.title + "." + audio.extension
-		audio.download(filepath="/home/meder/Source/in/" + video.title + "." + audio.extension)
+		title = re.sub('[/,.!@$#]', '', video.title)
+		print "Downloading: " + title + "." + audio.extension + "----------"
+		audio.download(filepath="/home/meder/Source/in/" + title + "." + audio.extension)
 		i += 1
-
 
 
 ytDL()
