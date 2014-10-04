@@ -1,7 +1,7 @@
 # Reddit.com music subreddit link scraper - Mike Eder 2014
-#!/usr/bin/env python2
+#! /usr/bin/python
 
-import httplib2
+import httplib2, timeit, pafy
 from bs4 import BeautifulSoup, SoupStrainer
 
 http = httplib2.Http()
@@ -40,10 +40,30 @@ for link in BeautifulSoup(response).find_all('a', href=True):
 	if 'https://soundcloud.com' in link['href']:
 		scLinks.append(str(link['href']))
 
-# Output link lists
-print "Scraped links from www.reddit.com/r/" + subs[sub]
-print "YouTube:"
-print "\n".join(unique(ytLinks))
-print "SoundCloud:"
-print "\n".join(unique(scLinks))
+# Remove Duplicates
+ytLinks = unique(ytLinks)
+scLinks = unique(scLinks)
 
+# Output link lists
+#print "Scraped links from www.reddit.com/r/" + subs[sub]
+#print "YouTube:"
+#print "\n".join(ytLinks)
+#print "SoundCloud:"
+#print "\n".join(scLinks)
+
+# Function to perform youtube-dl on YT links
+
+def ytDL():
+	i = 0
+	for link in ytLinks:
+		i = int(i)
+		video = pafy.new(ytLinks[i])
+		audio = video.getbestaudio(preftype="m4a",ftypestrict=True)
+		print "Downloading: " + video.title + "." + audio.extension
+		audio.download(filepath="/home/meder/Source/in/" + video.title + "." + audio.extension)
+		i += 1
+
+
+
+ytDL()
+#print str(" ".join(ytLinks))
