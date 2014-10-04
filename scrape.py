@@ -4,7 +4,6 @@
 import httplib2, timeit, pafy, re, sys
 from bs4 import BeautifulSoup, SoupStrainer
 
-
 http = httplib2.Http()
 
 # List possible subreddits
