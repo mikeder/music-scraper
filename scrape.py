@@ -6,20 +6,11 @@ from bs4 import BeautifulSoup, SoupStrainer
 
 http = httplib2.Http()
 
-# List possible subreddits
-#subs = ['electronicmusic','dnb','liquiddnb','trance','house','trap']
-#print "Subreddits available for scraping:"
-#for index, item in enumerate(subs):
-#	print index, item
-#try:
-#	sub = int(raw_input('Select a subreddit to grab links from: '))
-#except ValueError:
-#	print "You must enter a valid number!"
-
-# Get sub from sys.argv
+# Get args from sys.argv
 
 sub = str(sys.argv[1])
 full = 'http://www.reddit.com/r/' + sub
+dir = str(sys.argv[2])
 print 'Scraping links from ' + full
 status, response = http.request(full)
 
@@ -49,13 +40,6 @@ for link in BeautifulSoup(response).find_all('a', href=True):
 ytLinks = unique(ytLinks)
 scLinks = unique(scLinks)
 
-# Output link lists
-#print "Scraped links from www.reddit.com/r/" + subs[sub]
-#print "YouTube:"
-#print "\n".join(ytLinks)
-#print "SoundCloud:"
-#print "\n".join(scLinks)
-
 # Function to perform youtube-dl on YT links
 
 def ytDL():
@@ -63,10 +47,10 @@ def ytDL():
 	for link in ytLinks:
 		i = int(i)
 		video = pafy.new(ytLinks[i])
-		audio = video.getbestaudio(preftype="m4a",ftypestrict=True)
+		audio = video.getbestaudio()
 		title = re.sub('[/,.!@$#]', '', video.title)
 		print "Downloading: " + title + "." + audio.extension
-		audio.download(filepath="/home/meder/Source/in/" + title + "." + audio.extension)
+		audio.download(filepath=dir + title + "." + audio.extension)
 		i += 1
 
 
