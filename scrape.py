@@ -1,17 +1,22 @@
-# Reddit.com music subreddit  scraper/downloader/convertor - Mike Eder 2014
-#! /usr/bin/python
+#!/usr/bin/env python
 
-import httplib2, time, pafy, re, sys, os
+import httplib2, time, pafy, re, sys, os, ConfigParser
 from bs4 import BeautifulSoup, SoupStrainer
 from pydub import AudioSegment
 
+config = ConfigParser.RawConfigParser()
+config.readfp(open(r'/etc/rsdc.config'))
+
+
 http = httplib2.Http()
 
-# Get vars from sys.argv
+# Get vars from sys.argv and rsdc.config
 
 sub = str(sys.argv[1])
 full = 'http://www.reddit.com/r/' + sub
-dir = str(sys.argv[2])
+inDir = config.get('paths', 'inDir')
+outDir = config.get('paths', 'outDir')
+
 print 'Scraping links from ' + full
 status, response = http.request(full)
 
@@ -55,7 +60,7 @@ def ytDL():
 			video = pafy.new(link)
 			audio = video.getbestaudio() # selects best available audio stream
 			title = re.sub('[/,.!@$#<>()]', '', video.title)
-			file = dir + title + '.' + audio.extension
+			file = inDir + title + '.' + audio.extension
 			size = audio.get_filesize() / 1048576
 			line1 = '%d. Opening: %s' % (i + 1, link)	
 			line2 = '   Downloading to: %s - %sMB' % (file, str(size))
@@ -91,7 +96,7 @@ def ytDL():
 # Function to process new files for artist, title, ext.
 def proc(i):
 	path = sources[i]
-	file = path[len(dir):-4]
+	file = path[len(inDir):-4]
 	ext = path[-4:]
 	split = file.split('-')
 	where = file.find('-')
@@ -121,7 +126,6 @@ def convert():
 			inFile = AudioSegment.from_file(path)
 			comments = 'Ripped by music-scraper w/ help from pafy and pydub'
 # Export converted file in mp3 format to below dir
-			outDir = '/home/meder/Source/out/1/'
 			if artist == title:
 				outFile = '%s.mp3' % (artist)
 			else:
