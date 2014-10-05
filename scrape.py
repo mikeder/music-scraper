@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# RSDC - Reddit Scrape Download Convert (Mike Eder 2014)
+
 import httplib2, time, pafy, re, sys, os, ConfigParser
 from bs4 import BeautifulSoup, SoupStrainer
 from pydub import AudioSegment
