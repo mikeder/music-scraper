@@ -18,6 +18,13 @@ sub = str(sys.argv[1])
 full = 'http://www.reddit.com/r/' + sub
 inDir = config.get('paths', 'inDir')
 outDir = config.get('paths', 'outDir')
+subDir = ''
+if len(sys.argv) > 2:
+	subDir = str(sys.argv[2]) + '/'
+	inDir = inDir + subDir
+	outDir = outDir + subDir
+else:
+	pass
 
 print 'Scraping links from ' + full
 status, response = http.request(full)
