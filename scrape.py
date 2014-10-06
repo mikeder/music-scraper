@@ -7,26 +7,26 @@ from bs4 import BeautifulSoup, SoupStrainer
 from pydub import AudioSegment
 
 config = ConfigParser.RawConfigParser()
-config.readfp(open(r'/etc/rsdc.config'))
+config.readfp(open(r'/usr/local/etc/rsdc.config'))
 
 
 http = httplib2.Http()
 
 # Get vars from sys.argv and rsdc.config
 
-sub = str(sys.argv[1])
-full = 'http://www.reddit.com/r/' + sub
-inDir = config.get('paths', 'inDir')
-outDir = config.get('paths', 'outDir')
+hyp = config.get('paths', 'HTTP')
+inDir = config.get('paths', 'inDIR')
+outDir = config.get('paths', 'outDIR')
 subDir = ''
-if len(sys.argv) > 2:
+sub = str(sys.argv[1])
+if len(sys.argv) > 2: # If a sub directory is passed, append it
 	subDir = str(sys.argv[2]) + '/'
 	inDir = inDir + subDir
 	outDir = outDir + subDir
 else:
 	pass
-
-print 'Scraping links from ' + full
+full = hyp + sub
+print 'Scraping links from: ' + full
 status, response = http.request(full)
 
 # Function to remove duplicate links
@@ -66,17 +66,20 @@ def ytDL():
 	for link in ytLinks:
 		try:
 			link = ytLinks[i]
+			line1 = '%d. Opening: %s' % (i + 1, link)
+			print line1
 			video = pafy.new(link)
-			audio = video.getbestaudio() # selects best available audio stream
-			title = re.sub('[/,.!@$#<>()]', '', video.title)
+			audio = video.getbestaudio() # selects best available audio 
+			title = re.sub('[\'/,;:.!@$#<>()]', '', str(video.title))
+			punks = '''!()[]{};:'"\,<>./?@#$%^&*_~'''
+			#title = str(video.title)
+			#title = fTitle.decode('utf-8').decode('ascii','ignore').encode('ascii')
 			file = inDir + title + '.' + audio.extension
-			size = audio.get_filesize() / 1048576
-			line1 = '%d. Opening: %s' % (i + 1, link)	
-			line2 = '   Downloading to: %s - %sMB' % (file, str(size))
+			size = audio.get_filesize() / 1048576	
+			line2 = '+++ Downloading to: %s - %sMB' % (file, str(size))
 			if os.path.isfile(file):
-				print '%s already exists, skipping' % file
+				print '--- Source file already exists, skipping'
 			else: # download audio if it doesn't already exist
-				print line1
 				print line2
 				audio.download(filepath=file)
 				sources.append(file)
@@ -85,7 +88,7 @@ def ytDL():
 			i += 1
 		except Exception: # handle restricted/private videos etc.
 			err = sys.exc_info()[:2]
-			print '%d. **Problem** %s, skipping' % (i + 1, err[1])
+			print '*** Problem: %s, skipping' % (err[1])
 			sys.exc_clear()
 			i += 1
 	tSize = sum(tSize)
