@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# RSDC - Reddit Scrape Download Convert (Mike Eder 2014)
+# RSDC - Reddit Scrape Download Convert - sqweebking 2014
 
 import httplib2, time, pafy, re, sys, os, ConfigParser
 from bs4 import BeautifulSoup, SoupStrainer
@@ -46,9 +46,9 @@ scLinks = []
 
 # For loop to append found links
 for link in BeautifulSoup(response).find_all('a', href=True):
-	if 'https://www.youtube.com' in link['href']:
+	if 'www.youtube.com' in link['href']:
 		ytLinks.append(str(link['href']))
-	if 'https://soundcloud.com' in link['href']:
+	if 'soundcloud.com' in link['href']:
 		scLinks.append(str(link['href']))
 
 # Remove Duplicates from link arrays
@@ -76,9 +76,9 @@ def ytDL():
 			#title = fTitle.decode('utf-8').decode('ascii','ignore').encode('ascii')
 			file = inDir + title + '.' + audio.extension
 			size = audio.get_filesize() / 1048576	
-			line2 = '+++ Downloading to: %s - %sMB' % (file, str(size))
+			line2 = '- Downloading to: %s - %sMB' % (file, str(size))
 			if os.path.isfile(file):
-				print '--- Source file already exists, skipping'
+				print '- Source file already exists, skipping'
 			else: # download audio if it doesn't already exist
 				print line2
 				audio.download(filepath=file)
@@ -88,7 +88,7 @@ def ytDL():
 			i += 1
 		except Exception: # handle restricted/private videos etc.
 			err = sys.exc_info()[:2]
-			print '*** Problem: %s, skipping' % (err[1])
+			print '** Problem: %s, skipping' % (err[1])
 			sys.exc_clear()
 			i += 1
 	tSize = sum(tSize)
