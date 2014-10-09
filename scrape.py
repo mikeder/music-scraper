@@ -25,11 +25,11 @@ outDir = config.get('paths', 'outDIR')
 subDir = ''
 sub = str(sys.argv[1])
 if len(sys.argv) > 2: # If a sub directory is passed, append it
-	subDir = str(sys.argv[2]) + '/'
-	inDir = inDir + subDir
-	outDir = outDir + subDir
+ subDir = str(sys.argv[2]) + '/'
+ inDir = inDir + subDir
+ outDir = outDir + subDir
 else:
-	pass
+ pass
 full = hyp + sub
 print 'Scraping links from: ' + full
 status, response = http.request(full)
