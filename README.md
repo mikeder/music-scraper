@@ -21,7 +21,10 @@ For ubuntu / debian, you need python-pip
 
     $ apt-get install python-pip
 
-# Config file should contain: 
+# Config file:
+
+/usr/local/etc/rsdc.config
+
     [paths]
     
     HTTP = http://www.reddit.com/r/
