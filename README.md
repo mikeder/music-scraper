@@ -12,6 +12,10 @@ Python Music Scraper
 
     $ git clone https://github.com/sqweebking/music-scraper.git
     $ pip install BeautifulSoup4 httplib2 pafy pydub soundcloud
+    
+If you dont have avconv or ffmpeg installed:
+
+    $ apt-get install libav-tools
 
 For ubuntu / debian, you need python-pip
 
