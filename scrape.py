@@ -2,18 +2,21 @@
 
 # RSDC - Reddit Scrape Download Convert - sqweebking 2014
 
-import httplib2, time, pafy, re, sys, os, ConfigParser
+import httplib2
+import time
+import pafy
+import re
+import sys
+import os
+import ConfigParser
 from bs4 import BeautifulSoup, SoupStrainer
 from pydub import AudioSegment
 
 config = ConfigParser.RawConfigParser()
 config.readfp(open(r'/usr/local/etc/rsdc.config'))
 
-
+# Get vars going
 http = httplib2.Http()
-
-# Get vars from sys.argv and rsdc.config
-
 hyp = config.get('paths', 'HTTP')
 inDir = config.get('paths', 'inDIR')
 outDir = config.get('paths', 'outDIR')
@@ -58,8 +61,8 @@ scLinks = unique(scLinks)
 # Array to hold downloaded files path for conversion function
 sources = []
 
-# Function to perform audio download on YT links
-def ytDL():
+# Function to perform download sequence
+def download():
 	i = 0
 	tSize = [] # array to hold file sizes for sum at the end
 	start = time.time() # start time for download timer
