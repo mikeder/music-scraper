@@ -35,7 +35,8 @@ For ubuntu / debian, you need python-pip
     
 For SoundCloud downloading, you'll need to get ID3
 
-    $ wget 'http://ftp.de.debian.org/debian/pool/main/p/python-id3/python-id3_1.2.orig.tar.gz'
+    $ wget 'http://ftp.de.debian.org/debian/pool/main/p/python-id3/python-id3_1.2.orig.tar.gz'; echo '33f6ac3987ddc7b7d91cae4b56d6fbc2  python-id3_1.2.orig.tar.gz' | md5sum -c
+    # python-id3_1.2.orig.tar.gz: OK
     $ tar -zxvf python-id3_1.2.orig.tar.gz
     $ cd python-id3-1.2.orig
     $ python setup.py install
