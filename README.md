@@ -17,12 +17,12 @@ For ubuntu / debian, you need python-pip
 
     $ apt-get install python-pip
 
-# Config file should contain:
+# Config file should contain: 
 [paths]
-# Always include trailing / or bad stuff happens
 HTTP = http://www.reddit.com/r/
 inDIR = /home/music/source/in/
 outDIR = /home/music/source/out/
+* Always include the trailing '/' or else things will break.
 
 ## Usage:
     $ python scrape.py liquiddnb 1
