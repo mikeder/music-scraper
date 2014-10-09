@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 
 # RSDC - Reddit Scrape Download Convert - sqweebking 2014
