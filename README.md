@@ -1,7 +1,34 @@
-Python script to scrape YouTube and Soundcloud links from electronic music subreddits.
+Python Subreddit Music Scraper
+======
 
-It currently only handles YouTube links for download and convertions via pafy and pydub.
+* Python script to scrape YouTube and Soundcloud links from electronic music subreddits from http://www.reddit.com.
 
-Requires: httplib2, time, pafy, re, sys, os, bs4 and pydub
+* It currently only handles YouTube links for download and convertions via pafy and pydub.
 
-Todo: Add config file functionality for in/out dir, export format and MySql(download counts, time to dl, etc.)
+### Installation
+
+For ubuntu / debian, you need python-pip
+
+    apt-get install python-pip
+
+Required libraries :  httplib2, time, pafy, re, sys, os, ps4, pydub
+
+    pip install httplib2 time pafy re sys os bs4 pydub
+
+Then do
+
+    git clone https://github.com/sqweebking/music-scraper.git
+    
+    cd music-scraper
+    
+    
+    
+    
+
+
+
+### Todo: 
+
+* Add config file functionality for in/out dir, export format and MySql(download counts, time to dl, etc.)
+
+* Describe args
