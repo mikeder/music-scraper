@@ -5,19 +5,30 @@ Python Music Scraper
 
 * It currently only handles YouTube links for download and convertions via pafy and pydub.
 
-* Required libraries :  httplib2, time, pafy, re, sys, os, ps4, pydub
+* Required libraries :  httplib2, BeautifulSoup4, pafy, pydub, soundcloud
 
 
 ## Installation
 
     $ git clone https://github.com/sqweebking/music-scraper.git
-    
+    $ pip install BeautifulSoup4 httplib2 pafy pydub soundcloud
 
 For ubuntu / debian, you need python-pip
 
     $ apt-get install python-pip
 
-for soundcloud downloading, you'll need to get ID3
+# Config file should contain:
+[paths]
+# Always include trailing / or bad stuff happens
+HTTP = http://www.reddit.com/r/
+inDIR = /home/music/source/in/
+outDIR = /home/music/source/out/
+
+## Usage:
+    $ python scrape.py liquiddnb 1
+    This will scrape http://www.reddit.com/r/liquiddnb and download audio files to the inDIR, then convert them to .mp3 and put them in the outDIR.
+    
+For SoundCloud downloading, you'll need to get ID3
 
     $ wget 'http://ftp.de.debian.org/debian/pool/main/p/python-id3/python-id3_1.2.orig.tar.gz'
     $ tar -zxvf python-id3_1.2.orig.tar.gz
