@@ -157,12 +157,12 @@ def convert():
                 i += 1
 	end = time.time()
 	cvTime = round(end - start)
-        cvTimeStr = ''
-        if cvTime < 60: # determine if in seconds or minutes
-                cvTimeStr = ' seconds'
-        else:
-                cvTime = round(cvTime / 60)
-                cvTimeStr = ' minutes'
+  cvTimeStr = ''
+  if cvTime < 60: # determine if in seconds or minutes
+    cvTimeStr = ' seconds'
+  else:
+    cvTime = round(cvTime / 60)
+    cvTimeStr = ' minutes'
 	if sources:
 		print 'Converted %d files in %d %s' % (c, cvTime, cvTimeStr)
 	else:
