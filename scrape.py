@@ -62,7 +62,7 @@ scLinks = unique(scLinks)
 sources = []
 
 # Function to perform download sequence
-def download():
+def ytDL():
 	i = 0
 	tSize = [] # array to hold file sizes for sum at the end
 	start = time.time() # start time for download timer
