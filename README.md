@@ -18,14 +18,19 @@ For ubuntu / debian, you need python-pip
     $ apt-get install python-pip
 
 # Config file should contain: 
-[paths]
-HTTP = http://www.reddit.com/r/
-inDIR = /home/music/source/in/
-outDIR = /home/music/source/out/
+    [paths]
+    
+    HTTP = http://www.reddit.com/r/
+    
+    inDIR = /home/music/source/in/
+    
+    outDIR = /home/music/source/out/
+    
 * Always include the trailing '/' or else things will break.
 
 ## Usage:
     $ python scrape.py liquiddnb 1
+    
     This will scrape http://www.reddit.com/r/liquiddnb and download audio files to the inDIR, then convert them to .mp3 and put them in the outDIR.
     
 For SoundCloud downloading, you'll need to get ID3
