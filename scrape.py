@@ -91,7 +91,7 @@ def ytDL():
 			i += 1
 		except Exception: # handle restricted/private videos etc.
 			err = sys.exc_info()[:2]
-			print '** Problem: %s, skipping' % (err[1])
+	 	  print '** Problem: %s, skipping' % (err[1])
 			sys.exc_clear()
 			i += 1
 	tSize = sum(tSize)
@@ -173,3 +173,4 @@ print 'Attempting to download %d new songs' % len(ytLinks)
 ytDL()
 print 'Converting files to MP3'
 convert()
+# indent fix
