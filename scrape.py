@@ -2,7 +2,6 @@
 
 # RSDC - Reddit Scrape Download Convert - sqweebking 2014
 # scrape.py
-# DEV Version 1.1
 
 import httplib2
 import time
@@ -77,13 +76,14 @@ def download():
    else: # download audio if it doesn't already exist
     print line2
     audio.download(filepath=file)
-    sources.append(file)
     print '%s' % ''*len(line2)
     tSize.append(size)
+    convert(file)
+    sources.append(file)
    i += 1
   except Exception: # handle restricted/private videos etc.
    err = sys.exc_info()[:2]
-   print '** Problem: %s, skipping' % (err[1])
+   print '* Problem: %s, skipping' % (err[1])
    sys.exc_clear()
    i += 1
  tSize = sum(tSize)
@@ -123,33 +123,23 @@ def proc(track):
  return (path, file, ext, artist, title)
 	
 # Function to convert files to mp3
-def convert(sources):
- i = 0
- c = 0
+def convert(track):
  start = time.time()
- if not sources:
-  print 'No new files to convert :('
- else:
-  try:
-   for file in sources:
-    track = sources[i]
-    (path, file, ext, artist, title) = proc(track)
-    inFile = AudioSegment.from_file(path)
-    comments = 'Ripped by music-scraper w/ help from pafy and pydub'
+ try:
+  (path, file, ext, artist, title) = proc(track)
+  inFile = AudioSegment.from_file(path)
+  comments = 'Ripped by music-scraper w/ help from pafy and pydub'
 # Export converted file in mp3 format to below dir
-    if artist == title:
-     outFile = '%s.mp3' % (artist)
-    else:
-     outFile = '%s-%s.mp3' % (artist, title)
-     print '%d. Exporting: %s' % (i+1, outFile)
-     inFile.export(outDir + outFile, format='mp3', bitrate='192k', tags={'artist': artist, 'title': title, 'album': 'YT Rip', 'comments': comments})
-     c += 1		
-     i += 1
-  except:
-   err = sys.exc_info()[:2]
-   print '  **Problem** %s Export failed..' % (err[1])
-   sys.exc_clear()
-   i += 1
+  if artist == title:
+   outFile = '%s.mp3' % (artist)
+  else:
+   outFile = '%s-%s.mp3' % (artist, title)
+  print '- Exporting as: %s' % (outFile)
+  inFile.export(outDir + outFile, format='mp3', bitrate='192k', tags={'artist': artist, 'title': title, 'album': 'YT Rip', 'comments': comments})
+ except:
+  err = sys.exc_info()[:2]
+  print '* Problem** %s Export failed..' % (err[1])
+  sys.exc_clear()
  end = time.time()
  cvTime = round(end - start)
  cvTimeStr = ''
@@ -158,11 +148,9 @@ def convert(sources):
  else:
   cvTime = round(cvTime / 60)
   cvTimeStr = ' minutes'
- if sources:
-   print 'Converted %d files in %d %s' % (c, cvTime, cvTimeStr)
-
+ 
 # print 'Attempting to download %d new songs' % len(ytLinks)
 # Call the download function
 scrape()
-sources = download()
-convert(sources)
+download()
+
