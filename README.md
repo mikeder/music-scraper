@@ -53,15 +53,6 @@ For SoundCloud downloading, you'll need to get ID3
     $ cd python-id3-1.2.orig
     $ python setup.py install
     
-## download from soundcloud
-
-example:
-
-
-    $ cd downloader
-    $ python scDL.py https://soundcloud.com/iguanodon/witchcraft-valley
-
-
 
 ## Todo: 
 
