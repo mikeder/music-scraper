@@ -17,9 +17,12 @@ If you dont have avconv or ffmpeg installed:
 For ubuntu / debian, you need python-pip
 
     $ apt-get install python-pip
-    
-    $ git clone https://github.com/sqweebking/music-scraper.git
     $ pip install BeautifulSoup4 httplib2 pafy pydub soundcloud
+
+Clone this repo
+
+    $ git clone https://github.com/sqweebking/music-scraper.git
+
     
 
 
