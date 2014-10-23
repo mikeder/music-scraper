@@ -46,8 +46,7 @@ For SoundCloud downloading, you'll need to get ID3
 example:
 
 
-    $ cd downloader
-    $ python scDL.py https://soundcloud.com/iguanodon/witchcraft-valley
+    $ python souncloud-dl.py https://soundcloud.com/iguanodon/witchcraft-valley
 
 
 
