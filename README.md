@@ -56,6 +56,8 @@ For SoundCloud downloading, you'll need to get ID3
 
 ## Todo: 
 
-* Add config file functionality for in/out dir, export format and MySql(download counts, time to dl, etc.)
+* ADD CONFIG FILE FUNCTIONALITY FOR IN/OUT DIR, EXPORT FORMAT AND MYSQL(DOWNLOAD COUNTS, TIME TO DL, ETC.)
+
+* Give options for Max filesize
 
 * Describe args
