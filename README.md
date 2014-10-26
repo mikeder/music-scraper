@@ -40,7 +40,7 @@ Clone this repo
     
 You can specify multiple subreddits for scraping at the same time by seperating them with a '+'
 
-When a subfolder is included, files will be saved to /path/to/inDIR/<subfolder> and /path/to/outDIR/<subfolder> respectively    
+When a subfolder is included, files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolder respectively    
 
 ## Todo: 
 
