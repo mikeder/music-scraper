@@ -26,38 +26,24 @@ Clone this repo
     
 
 
-# Config file:
+## Config file:
 
-/usr/local/etc/rsdc.config
-
-    [paths]
-    
-    HTTP = http://www.reddit.com/r/
-    
-    inDIR = /home/music/source/in/
-    
-    outDIR = /home/music/source/out/
-    
-* Always include the trailing '/' or else things will break.
+* Edit scrape.conf to fit your system
+* Paths should always include the trailing '/'
+* Max file size is in MB
 
 ## Usage:
+
+    $ python scrape.py <subreddit> <subfolder>
     $ python scrape.py liquiddnb 1
     
-    This will scrape http://www.reddit.com/r/liquiddnb and download audio files to the inDIR, then convert them to .mp3 and put them in the outDIR.
+    This will scrape http://www.reddit.com/r/liquiddnb and download audio files to the /path/to/inDIR/1/, then convert them to .mp3 and put them in /path/to/outDIR/1/
     
-For SoundCloud downloading, you'll need to get ID3
-
-    $ wget 'http://ftp.de.debian.org/debian/pool/main/p/python-id3/python-id3_1.2.orig.tar.gz'; echo '33f6ac3987ddc7b7d91cae4b56d6fbc2  python-id3_1.2.orig.tar.gz' | md5sum -c
-    # python-id3_1.2.orig.tar.gz: OK
-    $ tar -zxvf python-id3_1.2.orig.tar.gz
-    $ cd python-id3-1.2.orig
-    $ python setup.py install
+    $ python scrape.py trance+electro 2
+    
+    You can also specify multiple subreddits for scraping at the same time by seperating them with a '+'
     
 
 ## Todo: 
 
-* ADD CONFIG FILE FUNCTIONALITY FOR IN/OUT DIR, EXPORT FORMAT AND MYSQL(DOWNLOAD COUNTS, TIME TO DL, ETC.)
-
-* Give options for Max filesize
-
-* Describe args
+* Add possibility to enable MySQL logging of # of files per scrape, locations, genre, etc.
