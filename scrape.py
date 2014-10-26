@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup, SoupStrainer
 from pydub import AudioSegment
 
 config = ConfigParser.RawConfigParser()
-config.readfp(open(r'config'))
+config.readfp(open(r'scrape.conf'))
 
 # Get vars going
 http = httplib2.Http()
@@ -35,28 +35,24 @@ print 'Scraping links from: ' + full
 status, response = http.request(full)
 
 def scrape():
- # Arrays to hold links
+ # Array to hold links
  ytLinks = []
- scLinks = []
 
  # For loop to append found links
  for link in BeautifulSoup(response).find_all('a', href=True):
-  if 'www.youtube.com' in link['href']:
+  if 'https://www.youtube.com' in link['href']:
    ytLinks.append(str(link['href']))
-  if 'soundcloud.com' in link['href']:
-   scLinks.append(str(link['href']))
- # Remove Duplicates from link arrays
+  if 'http://youtu.be' in link['href']:
+   ytLinks.append(str(link['href']))
+ # Remove Duplicates from link array
  ytLinks = list(set(ytLinks))
- scLinks = list(set(scLinks))
 
- # Array to hold downloaded files path for conversion function
- sources = []
- return (ytLinks, scLinks)
+ return (ytLinks)
 
 # Function to perform download sequence
 def download():
  i = 0
- ytLinks, scLinks = scrape()
+ ytLinks = scrape()
  sources = []
  tSize = [] # array to hold file sizes for sum at the end
  start = time.time() # start time for download timer
@@ -153,8 +149,5 @@ def convert(track):
   cvTime = round(cvTime / 60)
   cvTimeStr = ' minutes'
  
-# print 'Attempting to download %d new songs' % len(ytLinks)
 # Call the download function
-scrape()
 download()
-
