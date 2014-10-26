@@ -14,13 +14,14 @@ from bs4 import BeautifulSoup, SoupStrainer
 from pydub import AudioSegment
 
 config = ConfigParser.RawConfigParser()
-config.readfp(open(r'/usr/local/etc/rsdc.config'))
+config.readfp(open(r'config'))
 
 # Get vars going
 http = httplib2.Http()
 hyp = config.get('paths', 'HTTP')
 inDir = config.get('paths', 'inDIR')
 outDir = config.get('paths', 'outDIR')
+maxFS = int(config.get('limits', 'maxFS'))
 subDir = ''
 sub = str(sys.argv[1])
 if len(sys.argv) > 2: # If a sub directory is passed, append it
@@ -59,12 +60,13 @@ def download():
  sources = []
  tSize = [] # array to hold file sizes for sum at the end
  start = time.time() # start time for download timer
- print 'Attempting to download %d new songs' % len(ytLinks)
+ print('Attempting to download %d new songs' % len(ytLinks))
+ print('Files larger than %dMB will be skipped' % (maxFS))
  for link in ytLinks:
   try:
    link = ytLinks[i]
    line1 = '%d. Opening: %s' % (i + 1, link)
-   print line1
+   print(line1)
    video = pafy.new(link)
    audio = video.getbestaudio() # selects best available audio 
    title = re.sub('[\'/,;:.!@$#<>()]', '', str(video.title))
@@ -72,7 +74,9 @@ def download():
    size = audio.get_filesize() / 1048576	
    line2 = '- Downloading to: %s - %sMB' % (file, str(size))
    if os.path.isfile(file):
-    print '- Source file already exists, skipping'
+    print('- Source file already exists, skipping')
+   elif size > maxFS: #Skip file if greater than max set in config
+    print('- File size is greater than max allowed for download, skipping') 
    else: # download audio if it doesn't already exist
     print line2
     audio.download(filepath=file)

@@ -1,0 +1,6 @@
+[paths]
+HTTP = http://reddit.com/r/
+inDIR = /home/mike/Music/in/
+outDIR = /home/mike/Music/out/
+[limits]
+maxFS = 12
