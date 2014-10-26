@@ -36,13 +36,10 @@ Clone this repo
 
     $ python scrape.py <subreddit> <subfolder>
     $ python scrape.py liquiddnb 1
-    
-    This will scrape http://www.reddit.com/r/liquiddnb and download audio files to the /path/to/inDIR/1/, then convert them to .mp3 and put them in /path/to/outDIR/1/
-    
     $ python scrape.py trance+electro 2
     
-    You can also specify multiple subreddits for scraping at the same time by seperating them with a '+'
-    
+You can specify multiple subreddits for scraping at the same time by seperating them with a '+'
+When a subfolder is included, files will be saved to /path/to/inDIR/<subfolder> and /path/to/outDIR/<subfolder> respectively    
 
 ## Todo: 
 
