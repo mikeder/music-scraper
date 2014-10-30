@@ -72,6 +72,7 @@ def download():
    title = re.sub('[\'/,;:.!@$#<>()]', '', str(video.title))
    file = inDir + title + '.' + audio.extension
    size = audio.get_filesize() / 1048576	
+   size = round(size)
    line2 = '- Downloading to: %s - %sMB' % (file, str(size))
    if os.path.isfile(file):
     print('- Source file already exists, skipping')
