@@ -10,14 +10,16 @@ Python Music Scraper
 
 ## Installation
 
+** This install process has been updated for use with Python 3 **
+
 If you dont have avconv or ffmpeg installed:
 
-    $ apt-get install libav-tools
+    $ sudo apt-get install libav-tools
 
 For ubuntu / debian, you need python-pip
 
-    $ apt-get install python-pip
-    $ pip install BeautifulSoup4 httplib2 pafy pydub soundcloud
+    $ sudo apt-get install python3-pip
+    $ sudo pip3 install BeautifulSoup4 httplib2 pafy pydub
 
 Clone this repo
 
