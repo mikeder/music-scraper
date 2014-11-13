@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # RSDC - Reddit Scrape Download Convert - sqweebking 2014
 # scrape.py
@@ -19,7 +19,7 @@ config.read('scrape.conf')
 # Get vars from config file
 http = httplib2.Http()
 hyp = config['PATHS']['http']
-inDir = config.get('PATHS', 'inDIR')
+inDir = config['PATHS']['inDIR']
 outDir = config['PATHS']['outDIR']
 maxFS = int(config['LIMITS']['maxFS'])
 subDir = ''
