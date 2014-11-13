@@ -3,7 +3,7 @@
 # RSDC - Reddit Scrape Download Convert - sqweebking 2014
 # scrape.py
 
-import httplib2
+import requests
 import time
 import pafy
 import re
@@ -17,7 +17,6 @@ config = configparser.ConfigParser()
 config.read('scrape.conf')
 
 # Get vars from config file
-http = httplib2.Http()
 hyp = config['PATHS']['http']
 inDir = config['PATHS']['inDIR']
 outDir = config['PATHS']['outDIR']
@@ -40,10 +39,10 @@ def scrape(url):
  ytLinks = []
 
  print('Scraping links from: ' + page)
- status, response = http.request(page)
-
+ response = requests.get(page)
+ content = response.content
  # For loop to append found links
- for link in BeautifulSoup(response).find_all('a', href=True):
+ for link in BeautifulSoup(content).find_all('a', href=True):
   if 'https://www.youtube.com' in link['href']:
    ytLinks.append(str(link['href']))
   if 'http://youtu.be' in link['href']:

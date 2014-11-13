@@ -5,19 +5,21 @@ Python Music Scraper
 
 * Best available audio is then downloaded and converted to mp3 via pydub
 
-* Required libraries :  httplib2, BeautifulSoup4, pafy, pydub
+* Required libraries :  requests, BeautifulSoup4, pafy, pydub
 
 
 ## Installation
 
+** This install process has been updated for use with Python 3 **
+
 If you dont have avconv or ffmpeg installed:
 
-    $ apt-get install libav-tools
+    $ sudo apt-get install libav-tools
 
 For ubuntu / debian, you need python-pip
 
-    $ apt-get install python-pip
-    $ pip install BeautifulSoup4 httplib2 pafy pydub soundcloud
+    $ sudo apt-get install python3-pip
+    $ sudo pip3 install BeautifulSoup4 pafy pydub requests
 
 Clone this repo
 
