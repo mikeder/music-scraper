@@ -30,19 +30,19 @@ Clone this repo
 
 ## Config file:
 
-* Edit scrape.conf to fit your system
+* ~/.rsdc is generated on first run, edit it to fit your system
 * Paths should always include the trailing '/'
 * Max file size is in MB
 
 ## Usage:
 
-    $ python scrape.py <subreddit> <subfolder>
-    $ python scrape.py liquiddnb 1
-    $ python scrape.py trance+electro 2
+    $ python scrape.py <subreddit>
+    $ python scrape.py liquiddnb
+    $ python scrape.py trance+electro
     
 You can specify multiple subreddits for scraping at the same time by seperating them with a '+'
 
-When a subfolder is included, files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolder respectively    
+All files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolder respectively    
 
 ## Todo: 
 
