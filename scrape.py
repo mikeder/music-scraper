@@ -9,67 +9,93 @@ import pafy
 import re
 import sys
 import os
+import errno
 import configparser
 from pydub import AudioSegment
 from bs4 import BeautifulSoup, SoupStrainer
 
-config = configparser.ConfigParser()
-config.read('scrape.conf')
+def setup():
+ print('Making you a config file!')
+ config = configparser.ConfigParser()
+ config['PATHS'] = {
+ 			'baseurl' : ' http://reddit.com/r/',
+			'indir' : ' /home/music/scraped/in/',
+			'outdir' : ' /home/music/scraped/out/'}
+ config['LIMITS'] = {
+ 			'maxFS' : '20'}
+ cfile = '/home/meder/.rsdc'
+ with open(cfile, 'w') as configFile:
+  config.write(configFile)
+ print('A default config as been placed in ~/.rsdc, edit it to your liking')
+ configFile.close()
+ main()
 
-# Get vars from config file
-hyp = config['PATHS']['http']
-inDir = config['PATHS']['inDIR']
-outDir = config['PATHS']['outDIR']
-maxFS = int(config['LIMITS']['maxFS'])
-subDir = ''
-sub = str(sys.argv[1])
-if len(sys.argv) > 2: # If a sub directory is given, append it to the working
-# directories
- subDir = str(sys.argv[2]) + '/'
- inDir = inDir + subDir
- outDir = outDir + subDir
-else:
- pass
-page = hyp + sub
+def main():
+
+ try: 
+   cfile = '/home/meder/.rsdc'
+   print('Reading config')
+   config = configparser.ConfigParser()
+   config.read(cfile)
+   # Get vars from config file
+   baseurl = config['PATHS']['baseurl']
+   global inDir
+   inDir = config['PATHS']['indir']
+   global outDir
+   outDir = config['PATHS']['outdir']
+   global maxFS
+   maxFS = int(config['LIMITS']['maxfs'])
+ except Exception:
+  err = sys.exc_info()[:2]
+  print('* Problem reading: %s' % (err[1])) 
+  setup()
+ 
+ sub = str(sys.argv[1])
+ page = baseurl + sub
+ links = scrape(page)
+ download(sub,links)
 
 # Scrape function takes URL of a page, looks for YouTube links and puts found
-# links into an array for later use.
-def scrape(url):
+# links into an array for download function
+def scrape(page):
  # Array to hold links
- ytLinks = []
+ links = []
 
- print('Scraping links from: ' + page)
+ print('Scraping: ' + page)
  response = requests.get(page)
  content = response.content
  # For loop to append found links
  for link in BeautifulSoup(content).find_all('a', href=True):
   if 'https://www.youtube.com' in link['href']:
-   ytLinks.append(str(link['href']))
+   links.append(str(link['href']))
   if 'http://youtu.be' in link['href']:
-   ytLinks.append(str(link['href']))
- # Remove Duplicates from link array
- ytLinks = list(set(ytLinks))
+   links.append(str(link['href']))
 
- return (ytLinks)
+ time.sleep(1)
+ # Remove Duplicates from link array
+ links = list(set(links))
+ print('Found %d links' % len(links))
+ return (links)
 
 # Function to perform download sequence on array
-def download():
+def download(sub, links):
  i = 0
- ytLinks = scrape(page)
  sources = []
+ checkIN = checkPath(inDir + sub)
+ checkOUT = checkPath(outDir + sub)
  tSize = [] # array to hold file sizes for sum at the end
  start = time.time() # start time for download timer
- print('Attempting to download %d new songs' % len(ytLinks))
+ print('Attempting to download %d new songs' % len(links))
  print('Files larger than %dMB will be skipped' % (maxFS))
- for link in ytLinks:
+ for link in links:
   try:
-   link = ytLinks[i]
+   link = links[i]
    line1 = '%d. Opening: %s' % (i + 1, link)
    print(line1)
    video = pafy.new(link)
    audio = video.getbestaudio() # selects best available audio 
    title = re.sub('[\'/,;:.!@$#<>()]', '', str(video.title))
-   file = inDir + title + '.' + audio.extension
+   file = inDir + sub + '/' + title + '.' + audio.extension
    size = audio.get_filesize() / 1048576	
    size = round(size)
    line2 = '- Downloading to: %s - %sMB' % (file, str(size))
@@ -88,8 +114,9 @@ def download():
   except Exception: # handle restricted/private videos etc.
    err = sys.exc_info()[:2]
    print('* Problem: %s, skipping' % (err[1]))
-   sys.exc_clear()
+   pass
    i += 1
+
  tSize = sum(tSize)
  end = time.time() # end time for download timer
  dlTime = round(end - start)
@@ -138,12 +165,12 @@ def convert(track):
    outFile = '%s.mp3' % (artist)
   else:
    outFile = '%s-%s.mp3' % (artist, title)
-  print('- Exporting as: %s' % (outFile))
+  print('- Exporting to: %s' % (outDir + outFile))
   inFile.export(outDir + outFile, format='mp3', bitrate='192k', tags={'artist': artist, 'title': title, 'album': 'YT Rip', 'comments': comments})
  except:
   err = sys.exc_info()[:2]
   print('* Problem** %s Export failed..' % (err[1]))
-  sys.exc_clear()
+  pass
  end = time.time()
  cvTime = round(end - start)
  cvTimeStr = ''
@@ -152,6 +179,15 @@ def convert(track):
  else:
   cvTime = round(cvTime / 60)
   cvTimeStr = ' minutes'
- 
-# Call the download function
-download()
+
+def checkPath(path):
+ try:
+  os.makedirs(path)
+  print('Created new directory %s' % path)
+ except OSError as exception:
+  print('Directory exists %s' % path)
+  if exception.errno != errno.EEXIST:
+   raise 
+
+# Call main
+main()
