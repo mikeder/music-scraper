@@ -23,7 +23,7 @@ def setup():
 			'outdir' : ' /home/music/scraped/out/'}
  config['LIMITS'] = {
  			'maxFS' : '20'}
- cfile = '/home/meder/.rsdc'
+ cfile = os.path.expanduser('~/.rsdc')
  with open(cfile, 'w') as configFile:
   config.write(configFile)
  print('A default config as been placed in ~/.rsdc, edit it to your liking')
@@ -33,7 +33,7 @@ def setup():
 def main():
 
  try: 
-   cfile = '/home/meder/.rsdc'
+   cfile = os.path.expanduser('~/.rsdc')
    print('Reading config')
    config = configparser.ConfigParser()
    config.read(cfile)
