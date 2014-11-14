@@ -53,23 +53,29 @@ def main():
  sub = str(sys.argv[1])
  checkIN = checkPath(inDir + sub)
  checkOUT = checkPath(outDir + sub) 
- page = baseurl + sub
- links = scrape(page)
+ url = baseurl + sub
+ links = scrape(url)
+ count = 0
+ while not links and (count < 5):
+  print('Trying again...')
+  links = scrape(url)
+  count += 1
  download(sub,links)
 
 
 # Scrape function takes URL of a page, looks for YouTube links and puts found
 # links into an array for download function
-def scrape(page):
+def scrape(url):
  # Array to hold links
  links = []
 
- print('Scraping: ' + page)
+ print('Scraping: ' + url)
  
- response = requests.get(page)
- content = response.text
+ page = requests.get(url)
+ time.sleep(1)
+ soup = BeautifulSoup(page.content)
  # For loop to append found links
- for link in BeautifulSoup(content).find_all('a', href=True):
+ for link in soup.find_all('a', href=True):
   if 'youtube.com' in link['href']:
    links.append(str(link['href']))
   if 'youtu.be' in link['href']:
@@ -132,6 +138,7 @@ def download(sub, links):
  else: # source array is empty
   print('No new files downloaded.')
  return sources
+
 # Function to process new files for artist, title, ext.
 def proc(track):
  path = track
@@ -181,6 +188,7 @@ def convert(track):
   cvTime = round(cvTime / 60)
   cvTimeStr = ' minutes'
 
+# Check Directories, and create them if not exist
 def checkPath(path):
  try:
   os.makedirs(path)
