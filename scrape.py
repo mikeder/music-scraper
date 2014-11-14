@@ -49,11 +49,14 @@ def main():
   err = sys.exc_info()[:2]
   print('* Problem reading: %s' % (err[1])) 
   setup()
- 
+
  sub = str(sys.argv[1])
+ checkIN = checkPath(inDir + sub)
+ checkOUT = checkPath(outDir + sub) 
  page = baseurl + sub
  links = scrape(page)
  download(sub,links)
+
 
 # Scrape function takes URL of a page, looks for YouTube links and puts found
 # links into an array for download function
@@ -62,16 +65,16 @@ def scrape(page):
  links = []
 
  print('Scraping: ' + page)
+ 
  response = requests.get(page)
- content = response.content
+ content = response.text
  # For loop to append found links
  for link in BeautifulSoup(content).find_all('a', href=True):
-  if 'https://www.youtube.com' in link['href']:
+  if 'youtube.com' in link['href']:
    links.append(str(link['href']))
-  if 'http://youtu.be' in link['href']:
+  if 'youtu.be' in link['href']:
    links.append(str(link['href']))
 
- time.sleep(1)
  # Remove Duplicates from link array
  links = list(set(links))
  print('Found %d links' % len(links))
@@ -81,8 +84,6 @@ def scrape(page):
 def download(sub, links):
  i = 0
  sources = []
- checkIN = checkPath(inDir + sub)
- checkOUT = checkPath(outDir + sub)
  tSize = [] # array to hold file sizes for sum at the end
  start = time.time() # start time for download timer
  print('Attempting to download %d new songs' % len(links))
@@ -183,9 +184,9 @@ def convert(track):
 def checkPath(path):
  try:
   os.makedirs(path)
-  print('Created new directory %s' % path)
+  print('Created directory: %s' % path)
  except OSError as exception:
-  print('Directory exists %s' % path)
+  print('Directory exists: %s' % path)
   if exception.errno != errno.EEXIST:
    raise 
 
