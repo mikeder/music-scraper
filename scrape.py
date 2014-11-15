@@ -14,6 +14,10 @@ import configparser
 from pydub import AudioSegment
 from bs4 import BeautifulSoup, SoupStrainer
 
+sess = requests.Session()
+adapter = requests.adapters.HTTPAdapter(max_retries=10)
+sess.mount('http://', adapter)
+
 def setup():
  print('Making you a config file!')
  config = configparser.ConfigParser()
@@ -55,13 +59,11 @@ def main():
  checkOUT = checkPath(outDir + sub) 
  url = baseurl + sub
  links = scrape(url)
- count = 0
- while not links and (count < 5):
-  print('Trying again...')
-  links = scrape(url)
-  count += 1
  download(sub,links)
 
+def get_url_data(url):
+    raw_data = sess.get(url)
+    return raw_data
 
 # Scrape function takes URL of a page, looks for YouTube links and puts found
 # links into an array for download function
@@ -71,8 +73,8 @@ def scrape(url):
 
  print('Scraping: ' + url)
  
- page = requests.get(url)
- time.sleep(1)
+ page = get_url_data(url)
+ print(page)
  soup = BeautifulSoup(page.content)
  # For loop to append found links
  for link in soup.find_all('a', href=True):
