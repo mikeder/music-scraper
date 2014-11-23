@@ -77,7 +77,7 @@ def scrape(url):
  print(page)
  soup = BeautifulSoup(page.content)
  # For loop to append found links
- for link in soup.find_all('a', href=True):
+ for link in soup.find_all('a', class_="thumbnail may-blank ", href=True):#Find all <a> tags with the class for submitted links
   if 'youtube.com' in link['href']:
    links.append(str(link['href']))
   if 'youtu.be' in link['href']:
