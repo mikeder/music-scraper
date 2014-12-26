@@ -13,32 +13,34 @@ import errno
 import configparser
 from pydub import AudioSegment
 from bs4 import BeautifulSoup, SoupStrainer
+from os.path import expanduser
 
+home = expanduser("~")
 sess = requests.Session()
 adapter = requests.adapters.HTTPAdapter(max_retries=10)
 sess.mount('http://', adapter)
 
 def setup():
- print('Making you a config file!')
+ print('Generating config file...')
  config = configparser.ConfigParser()
  config['PATHS'] = {
  			'baseurl' : ' http://reddit.com/r/',
-			'indir' : ' /home/music/scraped/in/',
-			'outdir' : ' /home/music/scraped/out/'}
+			'indir' : home + '/RSDC/in/',
+			'outdir' : home + '/RSDC/out/'}
  config['LIMITS'] = {
  			'maxFS' : '20'}
- cfile = os.path.expanduser('~/.rsdc')
+ cfile = home + '/.rsdc'
  with open(cfile, 'w') as configFile:
   config.write(configFile)
- print('A default config as been placed in ~/.rsdc, edit it to your liking')
+ print('Default config created: %s/.rsdc, restarting...' % home)
  configFile.close()
  main()
 
 def main():
-
+ print('[Reddit: Scrape, Download, Convert]')
  try: 
-   cfile = os.path.expanduser('~/.rsdc')
-   print('Reading config')
+   cfile = home + '/.rsdc'
+   print('Reading config...')
    config = configparser.ConfigParser()
    config.read(cfile)
    # Get vars from config file
@@ -51,7 +53,8 @@ def main():
    maxFS = int(config['LIMITS']['maxfs'])
  except Exception:
   err = sys.exc_info()[:2]
-  print('* Problem reading: %s' % (err[1])) 
+  print('* Problem reading: %s *' % (err[1])) 
+  pass
   setup()
 
  sub = str(sys.argv[1])
@@ -72,7 +75,7 @@ def scrape(url):
  links = []
 
  print('Scraping: ' + url)
- 
+ time.sleep(2) 
  page = get_url_data(url)
  print(page)
  soup = BeautifulSoup(page.content)
@@ -142,8 +145,7 @@ def download(sub, links):
  return sources
 
 # Function to process new files for artist, title, ext.
-def proc(track):
- path = track
+def proc(path):
  file = path[len(inDir):-4]
  ext = path[-4:]
  split = file.split('-')
@@ -169,7 +171,7 @@ def convert(track):
  try:
   (path, file, ext, artist, title) = proc(track)
   inFile = AudioSegment.from_file(path)
-  comments = 'Ripped by music-scraper w/ help from pafy and pydub'
+  comments = 'Ripped by RSDC w/ help from pafy and pydub'
 # Export converted file in mp3 format to below dir
   if artist == title:
    outFile = '%s.mp3' % (artist)
