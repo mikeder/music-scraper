@@ -169,7 +169,7 @@ def convert(file, url):
                   bitrate='192k', 
                   tags={'artist': artist,
                         'title': title, 
-                        'album': 'RSDC Webrip', 
+                        'album': '/r/%s' % sub, 
                         'comments': url})
   except:
     err = sys.exc_info()[:2]
