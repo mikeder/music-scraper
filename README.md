@@ -48,18 +48,15 @@ All files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolde
 
 v1.1.0:
 * Bug fixes:
-  
   * Artist no longer includes /subreddit in mp3 tag.
-  
   * Script no longer fails on first run if config doesn't exist.
-
   * Use of Reddit API eliminates issue with hitting request limit.
+
 * Improvements:
-  
   * Implemented ReddiWrap (Reddit API wrapper)
   * https://github.com/derv82/reddiwrap/
-
   * Removed unused variables and cleaned up functions
+  * BeautifulSoup no longer a dependency
 
 ## Todo: 
 
