@@ -1,4 +1,4 @@
-Python Music Scraper v1.1.1
+Python Music Scraper v1.1.2
 ======
 
 * Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
@@ -45,6 +45,10 @@ You can specify multiple subreddits for scraping at the same time by seperating 
 All files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolder respectively    
 
 ## Changelog:
+v1.1.2:
+* Improvements:
+  * Made Album MP3 tag == /r/<subreddit>
+
 v1.1.1:
 * Bug fixes:
   * Updated submodule so that ReddiWrap.py can find Web.py after a fresh clone.

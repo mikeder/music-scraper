@@ -2,7 +2,7 @@
 
 # RSDC - sqweebking (2014)
 # Reddit: Scrape, Download, Convert
-# rsdc.py v1.1.1
+# rsdc.py v1.1.2
 
 import requests
 import time
