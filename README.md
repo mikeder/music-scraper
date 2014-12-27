@@ -1,7 +1,7 @@
 Python Music Scraper v1.1.1
 ======
 
-* Scrapes YouTube links from http://www.reddit.com/r/ specified subreddit
+* Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
 
 * Best available audio is then downloaded and converted to mp3 via pydub
 
