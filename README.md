@@ -47,7 +47,7 @@ All files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolde
 ## Changelog:
 v1.1.2:
 * Improvements:
-  * Made Album MP3 tag == /r/<subreddit>
+  * Made Album MP3 tag == /r/subreddit
 
 v1.1.1:
 * Bug fixes:
