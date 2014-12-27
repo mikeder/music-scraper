@@ -1,4 +1,4 @@
-Python Music Scraper v1.1.0
+Python Music Scraper v1.1.1
 ======
 
 * Scrapes YouTube links from http://www.reddit.com/r/ specified subreddit
@@ -23,9 +23,9 @@ For ubuntu / debian, you need python-pip
 
 Clone this repo
 
-    $ git clone https://github.com/sqweebking/music-scraper.git
+    $ git clone --recursive https://github.com/sqweebking/music-scraper.git
 
-    
+    * The --recursive flag is needed to also clone the ReddiWrap submodule
 
 
 ## Config file:
@@ -45,6 +45,9 @@ You can specify multiple subreddits for scraping at the same time by seperating 
 All files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolder respectively    
 
 ## Changelog:
+v1.1.1:
+* Bug fixes:
+  * Updated submodule so that ReddiWrap.py can find Web.py after a fresh clone.
 
 v1.1.0:
 * Bug fixes:
