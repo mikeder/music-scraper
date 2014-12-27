@@ -1,4 +1,4 @@
-Python Music Scraper v1.1.2
+Reddit Music Scraper v1.1.2
 ======
 
 * Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
@@ -40,9 +40,9 @@ Clone this repo
     $ python rsdc.py liquiddnb
     $ python rsdc.py trance+electro
     
-You can specify multiple subreddits for scraping at the same time by seperating them with a '+'
-
-All files will be saved to /path/to/inDIR/subfolder and /path/to/outDIR/subfolder respectively    
+You can specify multiple subreddits for scraping at the same time by seperating
+them with a '+' (new files aren't yet seperated into appropriate folders when 
+scraped this way)
 
 ## Changelog:
 v1.1.2:
@@ -60,10 +60,10 @@ v1.1.0:
   * Use of Reddit API eliminates issue with hitting request limit.
 
 * Improvements:
-  * Implemented ReddiWrap (Reddit API wrapper)
+  * Implemented ReddiWrap (Reddit API wrapper).
   * https://github.com/derv82/reddiwrap/
-  * Removed unused variables and cleaned up functions
-  * BeautifulSoup no longer a dependency
+  * Removed unused variables and cleaned up functions.
+  * BeautifulSoup no longer a dependency.
 
 ## Todo: 
 
