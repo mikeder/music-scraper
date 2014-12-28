@@ -2,7 +2,7 @@
 
 # RSDC - sqweebking (2014)
 # Reddit: Scrape, Download, Convert
-# rsdc.py v1.1.1
+# rsdc.py v1.1.2
 
 import requests
 import time
@@ -169,7 +169,7 @@ def convert(file, url):
                   bitrate='192k', 
                   tags={'artist': artist,
                         'title': title, 
-                        'album': 'RSDC Webrip', 
+                        'album': '/r/%s' % sub, 
                         'comments': url})
   except:
     err = sys.exc_info()[:2]
