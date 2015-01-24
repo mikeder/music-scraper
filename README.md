@@ -30,9 +30,13 @@ Clone this repo
 
 ## Config file:
 
+<<<<<<< HEAD
+    $ python souncloud-dl.py https://soundcloud.com/iguanodon/witchcraft-valley
+=======
 * ~/.rsdc is generated on first run, edit it to fit your system
 * Paths should always include the trailing '/'
 * Max file size is in MB
+>>>>>>> 477b713424d0318288f6b3f35abc774d85b81e3a
 
 ## Usage:
 
