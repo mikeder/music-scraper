@@ -2,10 +2,11 @@
 
 # RSDC - sqweebking (2014)
 # Reddit: Scrape, Download, Convert
-# rsdc.py v1.1.2
+# rsdc.py v1.2
 
 import requests
 import time
+import datetime
 import pafy
 import re
 import sys
@@ -15,9 +16,12 @@ import configparser
 from pydub import AudioSegment
 from os.path import expanduser
 from reddiwrap.ReddiWrap import ReddiWrap
+import sqlite3
 
 home = expanduser("~")
 sub = str(sys.argv[1])
+cwd = os.path.dirname(os.path.realpath(__file__))
+dbpath = cwd + '/data/scraped.db'
 
 def readConfig():
   try: 
@@ -55,19 +59,25 @@ def setup():
 
 def main():
   print('** Reddit: Scrape, Download, Convert **')
-  print('Check config file:')
+  print('[Check config file]')
   readConfig()
-  print('Check work directories:')
+  print('[Check work directories]')
   checkPath('%s/%s' % (inDir, sub))
-  checkPath('%s/%s' % (outDir, sub)) 
+  checkPath('%s/%s' % (outDir, sub))
+  print('[Check database]')
+  if os.path.isfile(dbpath):
+    print('[OK]')
+  else:
+    createDB()
+    print('[Database created]')
   links = scrape(sub)
   download(links)
 
 # Updated scrape function uses Reddit API, via reddiwrapper, to grab post urls,
-# sort out the YouTube links and return them as an array.
+# sort out the YouTube links and return them as a list
 def scrape(sub):
   reddit = ReddiWrap(user_agent='RSDC by sqweebking')
-  # Array to hold links
+  # List to hold links
   links = []
   print('Scraping /r/%s' % sub)
   posts = reddit.get('/r/%s' % sub)
@@ -76,11 +86,54 @@ def scrape(sub):
       links.append(post.url)
   return(links)
 
-# Perform download sequence on links array
+# Create database if it doesn't exist
+def createDB():
+  sql = '''
+        CREATE TABLE IF NOT EXISTS
+          data(id INTEGER PRIMARY KEY,
+          date DATETIME,
+          sub TEXT,
+          link TEXT,
+          title TEXT,
+          size INT)'''
+  db = sqlite3.connect(dbpath)
+  cursor = db.cursor()
+  cursor.execute(sql)
+  db.commit()
+  db.close()
+
+# Check database for existing links before download
+def checkDB(link):
+  sql = '''
+        SELECT date FROM data WHERE link = ?''' 
+  db = sqlite3.connect(dbpath)
+  cursor = db.cursor()
+  cursor.execute(sql,(link,))
+  exists = cursor.fetchall()
+  db.close()
+  if exists:
+    return 1
+  else:
+    return 0
+
+# Update scraped database with new downloads
+def updateDB(link, title, size):
+  date = datetime.datetime.now()
+  sql = '''
+        INSERT INTO data(date, sub, link, title, size)
+        VALUES(?,?,?,?,?)'''
+  data = [(date,sub,link,title,size)]
+  db = sqlite3.connect(dbpath)
+  cursor = db.cursor()
+  cursor.executemany(sql,data)
+  db.commit()
+  db.close()
+
+# Perform download sequence on link list 
 def download(links):
   i = 0
-  sources = []
-  tSize = [] # array to hold file sizes for sum at the end
+  count = 0 
+  tSize = [] # list to hold file sizes for sum at the end
   start = time.time() # start time for download timer
   print('Attempting to download %d new songs' % len(links))
   print('Files larger than %dMB will be skipped' % (maxFS))
@@ -96,8 +149,9 @@ def download(links):
       size = audio.get_filesize() / 1048576	
       size = round(size)
       line2 = '- Downloading: %s - %sMB' % (file, str(size))
-      if os.path.isfile(file):
-        print('[SKIP] Source file already exists')
+      exists = checkDB(url)
+      if exists:
+        print('[SKIP] Link found in database')
       elif size > maxFS: #Skip file if greater than max set in config
         print('[SKIP] File size is greater than %dMB' % (maxFS)) 
       else: # download audio if it doesn't already exist
@@ -106,7 +160,9 @@ def download(links):
         print('%s' % ''*len(line2))
         tSize.append(size)
         convert(file, url)
-        sources.append(file)
+        updateDB(url, title, size)
+        count += 1
+        os.remove(file)
       i += 1
     except Exception: # handle restricted/private videos etc.
       err = sys.exc_info()[:2]
@@ -122,14 +178,14 @@ def download(links):
   else:
     dlTime = round(dlTime / 60)
     dlTimeStr = ' minutes'
-  if sources: # if source array isn't empty display download info
-    print('Total download: %d files, %dMB, in %d%s' % (len(sources), 
-                                                       tSize, 
-                                                       dlTime, 
-                                                       dlTimeStr))
-  else: # source array is empty
+  if count: # if download count > 0 display downloads info
+    print('Total download: %d files, %dMB, in %d%s' % (count, 
+                                                      tSize, 
+                                                      dlTime, 
+                                                      dlTimeStr))
+  else: # nothing was actually downloaded
     print('No new files downloaded.')
-  return sources
+  return 0 
 
 # Process new files for artist, title, ext.
 def proc(file):
