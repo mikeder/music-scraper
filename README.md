@@ -1,57 +1,74 @@
-Python Music Scraper
+Reddit Music Scraper v1.1.2
 ======
 
-* Python script to scrape YouTube and Soundcloud links from electronic music subreddits from http://www.reddit.com.
+* Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
 
-* It currently only handles YouTube links for download and convertions via pafy and pydub.
+* Best available audio is then downloaded and converted to mp3 via pydub
 
-* Required libraries :  httplib2, BeautifulSoup4, pafy, pydub, soundcloud
+* Required libraries :  requests, pafy, pydub
 
 
 ## Installation
 
-    $ git clone https://github.com/sqweebking/music-scraper.git
-    $ pip install BeautifulSoup4 httplib2 pafy pydub soundcloud
+** This install process has been updated for use with Python 3 **
+
+If you dont have avconv or ffmpeg installed:
+
+    $ sudo apt-get install libav-tools
 
 For ubuntu / debian, you need python-pip
 
-    $ apt-get install python-pip
+    $ sudo apt-get install python3-pip
+    $ sudo pip3 install pafy pydub requests
 
-# Config file should contain: 
-    [paths]
-    
-    HTTP = http://www.reddit.com/r/
-    
-    inDIR = /home/music/source/in/
-    
-    outDIR = /home/music/source/out/
-    
-* Always include the trailing '/' or else things will break.
+Clone this repo
+
+    $ git clone --recursive https://github.com/sqweebking/music-scraper.git
+
+    * The --recursive flag is needed to also clone the ReddiWrap submodule
+
+
+## Config file:
+
+<<<<<<< HEAD
+    $ python souncloud-dl.py https://soundcloud.com/iguanodon/witchcraft-valley
+=======
+* ~/.rsdc is generated on first run, edit it to fit your system
+* Paths should always include the trailing '/'
+* Max file size is in MB
+>>>>>>> 477b713424d0318288f6b3f35abc774d85b81e3a
 
 ## Usage:
-    $ python scrape.py liquiddnb 1
+
+    $ python rsdc.py <subreddit>
+    $ python rsdc.py liquiddnb
+    $ python rsdc.py trance+electro
     
-    This will scrape http://www.reddit.com/r/liquiddnb and download audio files to the inDIR, then convert them to .mp3 and put them in the outDIR.
-    
-For SoundCloud downloading, you'll need to get ID3
+You can specify multiple subreddits for scraping at the same time by seperating
+them with a '+' (new files aren't yet seperated into appropriate folders when 
+scraped this way)
 
-    $ wget 'http://ftp.de.debian.org/debian/pool/main/p/python-id3/python-id3_1.2.orig.tar.gz'; echo '33f6ac3987ddc7b7d91cae4b56d6fbc2  python-id3_1.2.orig.tar.gz' | md5sum -c
-    # python-id3_1.2.orig.tar.gz: OK
-    $ tar -zxvf python-id3_1.2.orig.tar.gz
-    $ cd python-id3-1.2.orig
-    $ python setup.py install
-    
-## download from soundcloud
+## Changelog:
+v1.1.2:
+* Improvements:
+  * Made Album MP3 tag == /r/subreddit
 
-example:
+v1.1.1:
+* Bug fixes:
+  * Updated submodule so that ReddiWrap.py can find Web.py after a fresh clone.
 
+v1.1.0:
+* Bug fixes:
+  * Artist no longer includes /subreddit in mp3 tag.
+  * Script no longer fails on first run if config doesn't exist.
+  * Use of Reddit API eliminates issue with hitting request limit.
 
-    $ python souncloud-dl.py https://soundcloud.com/iguanodon/witchcraft-valley
-
-
+* Improvements:
+  * Implemented ReddiWrap (Reddit API wrapper).
+  * https://github.com/derv82/reddiwrap/
+  * Removed unused variables and cleaned up functions.
+  * BeautifulSoup no longer a dependency.
 
 ## Todo: 
 
-* Add config file functionality for in/out dir, export format and MySql(download counts, time to dl, etc.)
-
-* Describe args
+* Add possibility to enable MySQL logging of # of files per scrape, locations, genre, etc.
