@@ -1,4 +1,4 @@
-Reddit Music Scraper v1.1.2
+Reddit Music Scraper v1.2
 ======
 
 * Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
@@ -49,6 +49,11 @@ them with a '+' (new files aren't yet seperated into appropriate folders when
 scraped this way)
 
 ## Changelog:
+v1.2:
+* Improvements:
+  * SQLite Database added (link tracking, datetime, size, title)
+  * /data/scraped.db
+
 v1.1.2:
 * Improvements:
   * Made Album MP3 tag == /r/subreddit
