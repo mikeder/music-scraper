@@ -30,46 +30,42 @@ def readConfig():
     config.read(cfile)
     # Get vars from config file
     baseurl = config['PATHS']['baseurl']
-    global inDir
-    inDir = config['PATHS']['indir']
-    global outDir
-    outDir = config['PATHS']['outdir']
+    global downloadDir 
+    downloadDir = config['PATHS']['downloadDir']
     global maxFS
     maxFS = int(config['LIMITS']['maxfs'])
-    print('[OK]')
+    print('[RSDC] OK')
   except Exception:
-    print('[FAIL]') 
+    print('[RSDC] FAIL') 
     setup()
 
 def setup():
-  print('Generating new config..')
+  print('[RSDC] Generating new config..')
   config = configparser.ConfigParser()
   config['PATHS'] = {
  	    	'baseurl' : ' http://reddit.com/r/',
-			  'indir' : home + '/Downloads/rsdc/in',
-			  'outdir' : home + '/Downloads/rsdc/out'}
+		'downloadDir' : home + '/Downloads/rsdc'}
   config['LIMITS'] = {
-        'maxFS' : '20'}
+        	'maxFS' : '20'}
   cfile = home + '/.rsdc'
   with open(cfile, 'w') as configFile:
     config.write(configFile)
-  print('Default config created: %s/.rsdc, restarting..' % home)
+  print('[RSDC] Default config created: %s/.rsdc, restarting..' % home)
   configFile.close()
   readConfig()
 
 def main():
   print('** Reddit: Scrape, Download, Convert **')
-  print('[Check config file]')
+  print('[RSDC] Check config file')
   readConfig()
-  print('[Check work directories]')
-  checkPath('%s/%s' % (inDir, sub))
-  checkPath('%s/%s' % (outDir, sub))
-  print('[Check database]')
+  print('[RSDC] Check download directory')
+  checkPath('%s/%s' % (downloadDir, sub))
+  print('[RSDC] Check database')
   if os.path.isfile(dbpath):
-    print('[OK]')
+    print('[RSDC] OK')
   else:
     createDB()
-    print('[Database created]')
+    print('[RSDC] Database created')
   links = scrape(sub)
   download(links)
 
@@ -79,7 +75,7 @@ def scrape(sub):
   reddit = ReddiWrap(user_agent='RSDC by sqweebking')
   # List to hold links
   links = []
-  print('Scraping /r/%s' % sub)
+  print('[RSDC] Scraping /r/%s' % sub)
   posts = reddit.get('/r/%s' % sub)
   for post in posts:
     if 'youtube' in post.url or 'youtu.be' in post.url:
@@ -135,27 +131,27 @@ def download(links):
   count = 0 
   tSize = [] # list to hold file sizes for sum at the end
   start = time.time() # start time for download timer
-  print('Attempting to download %d new songs' % len(links))
-  print('Files larger than %dMB will be skipped' % (maxFS))
+  print('[RSDC] Attempting to download %d new songs' % len(links))
+  print('[RSDC] Files larger than %dMB will be skipped' % (maxFS))
   for link in links:
     try:
       url = links[i]
       line1 = '%d. Opening: %s' % (i + 1, url)
-      print(line1)
+      print('[RSDC] ' + line1)
       video = pafy.new(url)
       audio = video.getbestaudio() # selects best available audio
       title = re.sub('[\'/,;:.!@$#<>]', '', video.title)
-      file = '%s/%s/%s.%s' % (inDir, sub, title, audio.extension)
+      file = '%s/%s/%s.%s' % (downloadDir, sub, title, audio.extension)
       size = audio.get_filesize() / 1048576	
       size = round(size)
       line2 = '- Downloading: %s - %sMB' % (file, str(size))
       exists = checkDB(url)
       if exists:
-        print('[SKIP] Link found in database')
+        print('[RSDC] [SKIP] Link found in database')
       elif size > maxFS: #Skip file if greater than max set in config
-        print('[SKIP] File size is greater than %dMB' % (maxFS)) 
+        print('[RSDC] [SKIP] File size is greater than %dMB' % (maxFS)) 
       else: # download audio if it doesn't already exist
-        print(line2)
+        print('[RSDC] ' + line2)
         audio.download(filepath=file)
         print('%s' % ''*len(line2))
         tSize.append(size)
@@ -166,7 +162,7 @@ def download(links):
       i += 1
     except Exception: # handle restricted/private videos etc.
       err = sys.exc_info()[:2]
-      print('[FAIL] %s' % (err[1]))
+      print('[RSDC] [FAIL] %s' % (err[1]))
       pass
       i += 1
   tSize = sum(tSize)
@@ -179,17 +175,17 @@ def download(links):
     dlTime = round(dlTime / 60)
     dlTimeStr = ' minutes'
   if count: # if download count > 0 display downloads info
-    print('Total download: %d files, %dMB, in %d%s' % (count, 
+    print('[RSDC] Total download: %d files, %dMB, in %d%s' % (count, 
                                                       tSize, 
                                                       dlTime, 
                                                       dlTimeStr))
   else: # nothing was actually downloaded
-    print('No new files downloaded.')
+    print('[RSDC] No new files downloaded.')
   return 0 
 
 # Process new files for artist, title, ext.
 def proc(file):
-  path = '%s/%s/' % (inDir, sub)
+  path = '%s/%s/' % (downloadDir, sub)
   track = file[len(path):-4]
   split = track.split('-')
   where = track.find('-')
@@ -218,8 +214,8 @@ def convert(file, url):
       outFile = '%s.mp3' % (artist)
     else:
       outFile = '%s-%s.mp3' % (artist, title)
-    path = '%s/%s/%s' % (outDir, sub, outFile)
-    print('- Exporting: %s' % (path))
+    path = '%s/%s/%s' % (downloadDir, sub, outFile)
+    print('[RSDC] - Exporting: %s' % (path))
     inFile.export(path, 
                   format='mp3', 
                   bitrate='192k', 
@@ -229,7 +225,7 @@ def convert(file, url):
                         'comments': url})
   except:
     err = sys.exc_info()[:2]
-    print('[FAIL] %s' % (err[1]))
+    print('[RSDC] [FAIL] %s' % (err[1]))
     pass
   end = time.time()
   cvTime = round(end - start)
@@ -244,9 +240,9 @@ def convert(file, url):
 def checkPath(path):
   try:
     os.makedirs(path)
-    print('[NEW] %s' % path)
+    print('[RSDC] [NEW] %s' % path)
   except OSError as exception:
-    print('[OK] %s' % path)
+    print('[RSDC] [OK] %s' % path)
     if exception.errno != errno.EEXIST:
       raise 
 
