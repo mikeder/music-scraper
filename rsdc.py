@@ -91,7 +91,7 @@ def createDB():
           sub TEXT,
           link TEXT,
           title TEXT,
-          size INT)'''
+          size FLOAT)'''
   db = sqlite3.connect(dbpath)
   cursor = db.cursor()
   cursor.execute(sql)
@@ -143,7 +143,7 @@ def download(links):
       title = re.sub('[\'/,;:.!@$#<>]', '', video.title)
       file = '%s/%s/%s.%s' % (downloadDir, sub, title, audio.extension)
       size = audio.get_filesize() / 1048576	
-      size = round(size)
+      size = round(size, 2)
       line2 = '- Downloading: %s - %sMB' % (file, str(size))
       exists = checkDB(url)
       if exists:
