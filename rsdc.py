@@ -167,7 +167,7 @@ def download(links):
       i += 1
   tSize = sum(tSize)
   end = time.time() # end time for download timer
-  dlTime = round(end - start)
+  dlTime = round(end - start, 2)
   dlTimeStr = ''
   if dlTime < 60: # determine if seconds or minutes
     dlTimeStr = ' seconds'
@@ -228,7 +228,7 @@ def convert(file, url):
     print('[RSDC] [FAIL] %s' % (err[1]))
     pass
   end = time.time()
-  cvTime = round(end - start)
+  cvTime = round(end - start, 2)
   cvTimeStr = ''
   if cvTime < 60: # determine if in seconds or minutes
     cvTimeStr = ' seconds'
