@@ -3,7 +3,9 @@ Reddit Music Scraper v1.2
 
 * Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
 
-* Best available audio is then downloaded and converted to mp3 via pydub
+* Store links, and song info(title, size) and date into a SQLite database
+
+* Best available audio is then downloaded and converted to mp3(192k) via pydub
 
 * Required libraries :  requests, pafy, pydub
 
@@ -23,7 +25,7 @@ For ubuntu / debian, you need python-pip
 
 Clone this repo
 
-    $ git clone --recursive https://github.com/sqweebking/music-scraper.git
+    $ git clone --recursive https://github.com/mikeder/music-scraper.git
 
     * The --recursive flag is needed to also clone the ReddiWrap submodule
 
