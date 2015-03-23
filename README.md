@@ -5,7 +5,7 @@ Reddit Music Scraper v1.2
 
 * Store links, and song info(title, size) and date into a SQLite database
 
-* Best available audio is then downloaded and converted to mp3(192k) via pydub
+* Best available audio is then downloaded and converted to mp3(320k) via pydub
 
 * Required libraries :  requests, pafy, pydub
 
