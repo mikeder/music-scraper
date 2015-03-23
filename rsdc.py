@@ -218,7 +218,7 @@ def convert(file, url):
     print('[RSDC] - Exporting: %s' % (path))
     inFile.export(path, 
                   format='mp3', 
-                  bitrate='192k', 
+                  bitrate='320k', 
                   tags={'artist': artist,
                         'title': title, 
                         'album': '/r/%s' % sub, 
