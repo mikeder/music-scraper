@@ -1,0 +1,7 @@
+
+configparser
+pafy
+praw
+pydub
+requests
+youtube-dl

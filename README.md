@@ -1,4 +1,4 @@
-Reddit Music Scraper v1.2
+Reddit Music Scraper
 ======
 
 * Scrapes YouTube links from http://www.reddit.com/r/<subreddit>
@@ -47,20 +47,16 @@ them with a '+' (new files aren't yet seperated into appropriate folders when
 scraped this way)
 
 ## Changelog:
-v1.2:
 * Improvements:
   * SQLite Database added (link tracking, datetime, size, title)
   * /data/scraped.db
 
-v1.1.2:
 * Improvements:
   * Made Album MP3 tag == /r/subreddit
 
-v1.1.1:
 * Bug fixes:
   * Updated submodule so that ReddiWrap.py can find Web.py after a fresh clone.
 
-v1.1.0:
 * Bug fixes:
   * Artist no longer includes /subreddit in mp3 tag.
   * Script no longer fails on first run if config doesn't exist.
@@ -74,4 +70,7 @@ v1.1.0:
 
 ## Todo: 
 
-* Done for now, ill add to this when I think of new ideas.
+* Build docker container, push to personal repo
+* Better dependency and submodule management
+* pip package?
+* sqlite -> mysql
