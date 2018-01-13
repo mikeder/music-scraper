@@ -2,8 +2,8 @@ from distutils.core import setup
 
 setup(
     name='music-scraper',
-    version='0.1',
-    packages=['reddiwrap'],
+    version='0.1.1',
+    packages=['rsdc', 'reddiwrap'],
     url='https://github.com/mikeder/music-scraper',
     license='',
     author='mike.eder',
