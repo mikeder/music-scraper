@@ -4,7 +4,6 @@
 # Reddit: Scrape, Download, Convert
 # rsdc.py v1.2
 
-import requests
 import time
 import datetime
 import pafy
@@ -22,6 +21,7 @@ home = expanduser("~")
 sub = str(sys.argv[1])
 cwd = os.path.dirname(os.path.realpath(__file__))
 dbpath = cwd + '/data/scraped.db'
+
 
 def readConfig():
   try: 
