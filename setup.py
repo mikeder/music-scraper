@@ -12,7 +12,7 @@ def get_version():
 
 setup(
     name='rsdc',
-    version='0.1.1',
+    version=get_version(),
     packages=find_packages(),
     url='https://github.com/mikeder/music-scraper',
     license='MIT',
