@@ -19,7 +19,7 @@ import sqlite3
 
 
 def setup(a_home_path):
-    print('[RSDC] Generating new config..')
+    print('Generating new config..')
     config_file = a_home_path + '/.rsdc.conf'
     database_path = a_home_path + '/.rsdc.db'
     download_path = a_home_path + '/Downloads/rsdc'
@@ -51,17 +51,17 @@ def main():
     config = configparser.ConfigParser()
 
     # Checks
-    print '[RSDC] Check config file'
+    print 'Check config file'
     if not os.path.isfile(config_path):
         config_path = setup(home)
     config.read(config_path)
     download_dir = config['paths']['download_path']
-    print('[RSDC] Check download directory')
+    print('Check download directory')
     checkPath('%s/%s' % (download_dir, sub))
-    print('[RSDC] Check database')
+    print('Check database')
     database_path = config['paths']['database_path']
     if os.path.isfile(database_path):
-        print('[RSDC] OK')
+        print('OK - {}'.format(database_path))
     else:
         createDB(database_path)
     links = scrape(sub)
@@ -76,7 +76,7 @@ def scrape(sub):
     """
     reddit = ReddiWrap(user_agent='RSDC by sqweebking')
     links = []
-    print('[RSDC] Scraping /r/%s' % sub)
+    print('Scraping /r/%s' % sub)
     posts = reddit.get('/r/%s' % sub)
     for post in posts:
         if 'youtube' in post.url or 'youtu.be' in post.url:
@@ -100,7 +100,7 @@ def createDB(a_db_path):
     cursor.execute(sql)
     db.commit()
     db.close()
-    print('[RSDC] Database created')
+    print('Database created')
 
 
 def link_exists_in_db(a_db, a_link):
@@ -156,49 +156,48 @@ def download(a_config, a_link_list, a_sub):
     download_dir = a_config['paths']['download_path']
     max_filesize = int(a_config['limits']['max_filesize'])
 
-    i = 0
-    count = 0
-    tSize = [] # list to hold file sizes for sum at the end
-    start = time.time() # start time for download timer
-    print '[RSDC] Attempting to download %d new songs' % len(a_link_list)
-    print '[RSDC] Files larger than {}MB will be skipped'.format(max_filesize)
+    i = 1
+    dl_count = 0
+    dl_size = []
+    start = time.time()
+    print 'Attempting to download %d new songs' % len(a_link_list)
+    print 'Files larger than {}MB will be skipped'.format(max_filesize)
     for link in a_link_list:
         if 'attribution_link' in link:
             link = urllib.unquote_plus(link)
             link = "https://www.youtube.com/{}".format(link[link.find('watch'):])
         try:
-            line1 = '%d. Opening: %s' % (i + 1, link)
-            print('[RSDC] ' + line1)
+            exists = link_exists_in_db(db, link)
+            if exists:
+                raise ValueError('Link already in database.')
             video = pafy.new(link)
             audio = video.getbestaudio() # selects best available audio
             title = re.sub('[\'/,;:.!@$#<>]', '', video.title)
             file = '%s/%s/%s.%s' % (download_dir, a_sub, title, audio.extension)
             size = audio.get_filesize() / 1048576
             size = round(size, 2)
-            line2 = '- Downloading: %s - %sMB' % (file, str(size))
-            exists = link_exists_in_db(db, link)
-            if exists:
-                print('[RSDC] [SKIP] Link found in database')
-            elif size > max_filesize:
-                # Skip file if greater than max set in config
-                print('[RSDC] [SKIP] File size is greater than %dMB' % max_filesize)
+            line2 = 'Downloading: %s - %sMB' % (file, str(size))
+            if size > max_filesize:
+                raise ValueError('File is too large.')
             else:
                 # download audio if it doesn't already exist
-                print('[RSDC] ' + line2)
+                print('' + line2)
                 audio.download(filepath=file)
                 print('%s' % ''*len(line2))
-                tSize.append(size)
+                dl_size.append(size)
                 convert(file, download_dir, a_sub, link)
                 add_link_to_db(db, a_sub, link, title, size)
-                count += 1
+                dl_count += 1
                 os.remove(file)
-            i += 1
-        except Exception: # handle restricted/private videos etc.
-            err = sys.exc_info()[:2]
-            print('[RSDC] [FAIL] %s' % (err[1]))
+        except ValueError as e:
+            print('[SKIP] {} - {}'.format(e.message, link))
             pass
-            i += 1
-    tSize = sum(tSize)
+        except Exception:
+            # Catch All for private/broken videos
+            err = sys.exc_info()[:2]
+            print('[FAIL] %s' % (err[1]))
+            pass
+    dl_size = sum(dl_size)
     end = time.time() # end time for download timer
     dlTime = round(end - start, 2)
     dlTimeStr = ''
@@ -207,14 +206,14 @@ def download(a_config, a_link_list, a_sub):
     else:
         dlTime = round(dlTime / 60)
         dlTimeStr = ' minutes'
-    if count: # if download count > 0 display downloads info
-        print('[RSDC] Total download: %d files, %dMB, in %d%s' % (count,
-                                                      tSize,
+    if dl_count: # if download count > 0 display downloads info
+        print('Total download: %d files, %dMB, in %d%s' % (dl_count,
+                                                      dl_size,
                                                       dlTime,
                                                       dlTimeStr))
     else:
         # nothing was actually downloaded
-        print('[RSDC] No new files downloaded.')
+        print('No new files downloaded.')
     return 0
 
 
@@ -263,17 +262,21 @@ def convert(a_file, a_download_dir, a_sub, a_url):
         else:
             out_file = '%s-%s.mp3' % (artist, title)
         path = '%s/%s/%s' % (a_download_dir, a_sub, out_file)
-        print '[RSDC] - Exporting: %s' % path
+        print 'Exporting: %s' % path
         in_file.export(path,
                        format='mp3',
                        bitrate='320k',
                        tags={'artist': artist,
                              'title': title,
                              'album': '/r/%s' % a_sub,
-                             'comments': a_url})
+                             'comments': a_url,
+                             'description': 'rsdc({})'.format(a_url)})
     except:
         err = sys.exc_info()[:2]
-        print('[RSDC] [FAIL] %s' % (err[1]))
+        os.remove(in_file)
+        os.remove(a_file)
+        print('[FAIL] %s' % (err[1]))
+
         pass
     end = time.time()
     cvTime = round(end - start, 2)
@@ -293,9 +296,9 @@ def checkPath(path):
     """
     try:
         os.makedirs(path)
-        print('[RSDC] [NEW] %s' % path)
+        print('NEW - %s' % path)
     except OSError as exception:
-        print('[RSDC] [OK] %s' % path)
+        print('OK - %s' % path)
         if exception.errno != errno.EEXIST:
             raise
 

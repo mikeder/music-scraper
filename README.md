@@ -7,16 +7,16 @@ Reddit Music Scraper
 
 * Best available audio is then downloaded and converted to mp3(320k) via pydub
 
-* Required libraries :  requests, pafy, pydub
-
 
 ## Installation
 
-** This install process has been updated for use with Python 3 **
-
 If you dont have avconv or ffmpeg installed:
 
+    # Debian
     $ sudo apt-get install libav-tools
+    
+    # OSX
+    $ brew install ffmpeg
 
 For ubuntu / debian, you need python-pip
 
@@ -25,9 +25,10 @@ For ubuntu / debian, you need python-pip
 
 Clone this repo
 
-    $ git clone --recursive https://github.com/mikeder/music-scraper.git
-
-    * The --recursive flag is needed to also clone the ReddiWrap submodule
+    $ git clone https://github.com/mikeder/music-scraper.git
+    $ cd music-scraper/
+    $ pip install .
+    
 
 
 ## Config file:
@@ -38,9 +39,11 @@ Clone this repo
 
 ## Usage:
 
-    $ python rsdc.py <subreddit>
-    $ python rsdc.py liquiddnb
-    $ python rsdc.py trance+electro
+Pip installation will provide the `rsdc` console script:
+
+    $ rsdc <subreddit>
+    $ rsdc liquiddnb
+    $ rsdc trance+electro
     
 You can specify multiple subreddits for scraping at the same time by seperating
 them with a '+' (new files aren't yet seperated into appropriate folders when 
