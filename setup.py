@@ -17,7 +17,7 @@ setup(
     url='https://github.com/mikeder/music-scraper',
     license='MIT',
     author='mike.eder',
-    author_email='',
+    author_email='mikedernet@gmail.com',
     description='Reddit Music Scraper',
     install_requires=[
         'configparser==3.5.0',
