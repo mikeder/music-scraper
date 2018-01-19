@@ -42,9 +42,13 @@ class Alarm(WebHandlers.BaseHandler):
 
 
 class Scrape(WebHandlers.BaseHandler):
-    def post(self):
-        print self.request.body
-        print self.get_body_argument('sub', None)
+    def post(self, a_sub):
+        self.logger.info(a_sub)
+
+
+class Download(WebHandlers.BaseHandler):
+    def post(self, a_link_id):
+        self.logger.info(a_link_id)
 
 
 class Heartbeat(WebHandlers.BaseHandler):

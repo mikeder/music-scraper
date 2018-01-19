@@ -30,8 +30,10 @@ class Application(tornado.web.Application):
 
         routes = [
             (r'/', WebHandlers.Home),
+            (r'/scrape', RestAPIHandlers.Scrape),
             (r'/scrape/([A-Za-z0-9]+)', RestAPIHandlers.Scrape),
-            (r'/download/([A-Za-z0-9]+)', RestAPIHandlers.Download),
+            (r'/download', RestAPIHandlers.Download),
+            (r'/download/([A-Za-z0-9-]+)', RestAPIHandlers.Download),
             (r'/ws', WebHandlers.EchoWebSocket),
             (r'.*', WebHandlers.BaseHandler)
         ]
@@ -50,19 +52,18 @@ class Application(tornado.web.Application):
         # Setup Global Logging
         loglevel = getattr(logging, a_config['logging']['log_level'].upper())
         loglocation = a_config['logging']['log_location'] + a_config['logging']['log_name']
-        logger = logging.getLogger(a_config['app']['name'])
+        self.logger = logging.getLogger(a_config['app']['name'])
         try:
             os.makedirs(a_config['logging']['log_location'])
         except OSError as exception:
             if exception.errno != errno.EEXIST:
                 raise
-        logger.addHandler(logging.StreamHandler())
-        logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(name)s : %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', filename=loglocation, level=loglevel)
-        logger.addHandler(logging.StreamHandler())
+        logging.basicConfig(format='[%(levelname)s] %(asctime)s - %(name)s : %(message)s', level=loglevel)
+        self.logger.addHandler(logging.StreamHandler())
 
         # Start logging
-        logger.info("Initializing @ " + AppUtils.getInstance())
-        logger.debug("Processors: " + str(tornado.process.cpu_count()))
+        self.logger.info("Initializing @ " + AppUtils.getInstance())
+        self.logger.debug("Processors: " + str(tornado.process.cpu_count()))
 
         # Single Database connection across all handlers
         self.database = DatabaseUtils.AppDatabase(a_config['database'])
@@ -80,13 +81,36 @@ def main():
     parser.add_argument('-p', '--port', help='listen port, overrides port in config if set\n(Default: 8000)')
 
     args = parser.parse_args()
-    if not args.config:
-        parser.print_help()
-        sys.exit(1)
-    config = Config(args.config)
+    # if not args.config:
+    #     parser.print_help()
+    #     sys.exit(1)
+    config = {
+        "app": {
+            "name": "WebApp Base"
+        },
+        "client": {
+            "title": "WebApp Base",
+            "static_path": "static",
+            "template_path": "templates"
+        },
+        "database": {
+            "location": "data/",
+            "name": "webapp.db",
+            "version": 0
+        },
+        "logging": {
+            "log_location": "./log/",
+            "log_name": "webapp.log",
+            "log_level": "DEBUG"
+        },
+        "server": {
+            "port": 8001
+        }
+    }
     http_server = tornado.httpserver.HTTPServer(Application(config))
     http_server.listen(options.port)
     tornado.ioloop.IOLoop.current().start()
+
 
 if __name__ == '__main__':
     main()

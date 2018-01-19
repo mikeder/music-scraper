@@ -10,12 +10,11 @@ class BaseHandler(RequestHandler):
     def __init__(self, application, request, **kwargs):
         super(BaseHandler, self).__init__(application, request)
         self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(logging.StreamHandler())
         self.generator = AppUtils.Generator()
         self.stringutil = AppUtils.StringUtil()
 
     def write_error(self, status_code, **kwargs):
-        self.render("error.html", error=status_code)
+        self.write(str(status_code))
 
     @property
     def database(self):
@@ -23,11 +22,8 @@ class BaseHandler(RequestHandler):
 
 
 class Scrape(BaseHandler):
-    def post(self, *args, **kwargs):
-        print args
-        return 0
-
-
+    def post(self, sub):
+        self.logger.info(sub)
 
 class Alarm(BaseHandler):
     def get(self, a_alarm_id):
