@@ -28,7 +28,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'rsdc=rsdc.rsdc:main'
+            'rsdc=rsdc.rsdc:main',
+            'rsdc-api=rsdc.webcore:main'
         ]
     }
 )

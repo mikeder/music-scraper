@@ -1,5 +1,10 @@
 configparser
+markdown
 pafy
 pydub
+
 requests
+tornado
+pycurl
+pyyaml
 youtube-dl
