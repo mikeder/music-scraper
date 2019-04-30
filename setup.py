@@ -23,7 +23,7 @@ setup(
         'configparser==3.5.0',
         'pafy==0.5.3.1',
         'pydub==0.20.0',
-        'requests==2.18.4',
+        'requests>=2.20.0'
         'youtube-dl==2017.12.31'
     ],
     entry_points={
